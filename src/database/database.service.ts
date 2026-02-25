@@ -6,8 +6,14 @@ import { PrismaPg } from '@prisma/adapter-pg';
 @Injectable()
 export class DatabaseService extends PrismaClient implements OnModuleInit {
   constructor() {
+    const databaseUrl = process.env.DATABASE_URL;
+    if (!databaseUrl) {
+      throw new Error('DATABASE_URL environment variable is not set');
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const pool = new Pool({
-      connectionString: process.env.DATABASE_URL,
+      connectionString: databaseUrl,
     });
 
     super({
